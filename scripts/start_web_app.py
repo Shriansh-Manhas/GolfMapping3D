@@ -56,7 +56,7 @@ def main():
     
     # Start the web app
     try:
-        subprocess.run([sys.executable, "web_app.py"])
+        subprocess.run([sys.executable, "src/web_app/web_app.py"])
     except KeyboardInterrupt:
         print("\nWeb app stopped.")
 
