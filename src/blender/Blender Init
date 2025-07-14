@@ -1,0 +1,38 @@
+import bpy
+
+# Clean scene
+if bpy.ops.object.mode_set.poll():
+    bpy.ops.object.mode_set(mode='OBJECT')
+bpy.ops.object.select_all(action='SELECT')
+bpy.ops.object.delete(use_global=False)
+
+# Add UV sphere (base golf ball mesh)
+bpy.ops.mesh.primitive_uv_sphere_add(segments=64, ring_count=32, radius=1.0)
+obj = bpy.context.active_object
+obj.name = "GolfBall"
+
+# Create Geometry Node Group
+geo_group = bpy.data.node_groups.new("GolfBallNoSocketNames", 'GeometryNodeTree')
+nodes = geo_group.nodes
+links = geo_group.links
+nodes.clear()
+
+# Create Group Input/Output
+group_input = nodes.new(type="NodeGroupInput")
+group_input.location = (-300, 0)
+
+group_output = nodes.new(type="NodeGroupOutput")
+group_output.location = (300, 0)
+
+# Add Subdivision Surface node
+subdiv = nodes.new(type="GeometryNodeSubdivisionSurface")
+subdiv.location = (0, 0)
+subdiv.inputs[1].default_value = 3  # Set Level
+
+# Link using default index 0 (geometry)
+links.new(group_input.outputs[0], subdiv.inputs[0])
+links.new(subdiv.outputs[0], group_output.inputs[0])
+
+# Apply to modifier
+mod = obj.modifiers.new(name="GolfBallModifier", type='NODES')
+mod.node_group = geo_group
