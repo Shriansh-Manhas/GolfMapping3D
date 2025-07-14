@@ -1,11 +1,12 @@
 # Environment variables
 .env
 
-# Generated files
+# Generated files (be more specific to allow assets)
 image.png
 exported_label.glb
 output.glb
-*.glb
+# Only ignore generated GLB files, not all GLB files
+# *.glb
 
 # Python
 __pycache__/
